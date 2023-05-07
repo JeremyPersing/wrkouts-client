@@ -1,25 +1,8 @@
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
-import axios from "axios";
 
 import Page from "@/components/Page";
-
-const getMe = async (accessToken: string | undefined) => {
-  try {
-    if (!accessToken) return;
-
-    const { data } = await axios.get("http://localhost:4000/api/v1/me", {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-
-    if (data) alert(data);
-    else alert("Can't get data");
-  } catch (error) {
-    alert(JSON.stringify(error));
-  }
-};
+import { getMe } from "@/services/user";
 
 export default function Home() {
   const { status, data } = useSession();

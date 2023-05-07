@@ -1,54 +1,12 @@
-import axios from "axios";
+import { tokenExpiration } from "@/constants";
+import {
+  getRefreshedTokenPair,
+  loginOAuthUser,
+  loginOrRegisterUser,
+} from "@/services/auth";
 import NextAuth, { Session } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-
-const tokenExpiration = 60 * 60 * 24;
-
-const getRefreshedTokenPair = async (token: any) => {
-  try {
-    const authHeader = `Bearer ${token.refreshToken}`;
-
-    const { data } = await axios.post(
-      "http://localhost:4000/api/v1/token",
-      {}, // Don't forget this ;), or you'll waste hours debugging like me
-      {
-        headers: {
-          Authorization: authHeader,
-        },
-      }
-    );
-
-    if (!data) throw new Error("Unable to retrieve tokens");
-
-    token.refreshToken = data.refreshToken;
-    token.accessToken = data.accessToken;
-
-    return { ...token };
-  } catch (error: any) {
-    return { ...token, error: "RefreshAccessTokenError" as const };
-  }
-};
-
-const loginOAuthUser = async (token: string | undefined, provider: string) => {
-  try {
-    if (!token) return null;
-
-    const { data } = await axios.post(
-      "http://localhost:4000/api/v1/oauth/login",
-      {
-        token,
-        provider,
-      }
-    );
-
-    if (!data) return null;
-
-    return data;
-  } catch (error: any) {
-    return null;
-  }
-};
 
 export default NextAuth({
   providers: [
@@ -63,27 +21,21 @@ export default NextAuth({
         },
       },
       async authorize(credentials, req) {
-        const url = `http://localhost:4000/api/v1/${(credentials as any).type}`;
+        const type = (credentials as any).type;
 
-        const body = {
-          email: credentials?.email,
-          password: credentials?.password,
-        };
-        try {
-          const { data } = await axios.post(url, body);
+        const data = await loginOrRegisterUser(
+          type,
+          credentials?.email,
+          credentials?.password
+        );
 
-          if (data) {
-            return {
-              ...data,
-              accessTokenExpires: Date.now() + tokenExpiration * 1000,
-            };
-          }
+        if (data)
+          return {
+            ...data,
+            accessTokenExpires: Date.now() + tokenExpiration * 1000,
+          };
 
-          return null;
-        } catch (error: any) {
-          console.error(error);
-          return null;
-        }
+        return null;
       },
     }),
     GoogleProvider({
