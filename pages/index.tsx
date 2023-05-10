@@ -3,14 +3,16 @@ import Link from "next/link";
 
 import Page from "@/components/Page";
 import { getMe } from "@/services/user";
+import OneRepMaxCalculator from "@/components/Forms/OneRepMaxCalculator";
+import CalorieCalculator from "@/components/Forms/CalorieCalculator";
 
 export default function Home() {
   const { status, data } = useSession();
 
   return (
     <Page title="Adosus - Home" content="A fitness app">
-      <p>{JSON.stringify(status)}</p>
-      <p>{JSON.stringify(data)}</p>
+      <OneRepMaxCalculator />
+      <CalorieCalculator />
       <div className="flex ">
         <button
           className="btn btn-accent mr-5"
