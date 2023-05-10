@@ -5,6 +5,23 @@ import { Input } from "@/components/Input";
 import Page from "@/components/Page";
 import Select from "@/components/Select";
 
+const formatSeconds = (seconds: number) => {
+  let hours = Math.floor(seconds / 3600)
+    .toString()
+    .padStart(2, "0");
+  let minutes = Math.floor((seconds % 3600) / 60)
+    .toString()
+    .padStart(2, "0");
+  let sec = Math.floor((seconds % 3600) % 60)
+    .toString()
+    .padStart(2, "0");
+
+  if (hours == "00" && minutes === "00") return `${sec}`;
+  if (hours !== "00") return `${hours}:${minutes}:${sec}`;
+
+  return `${minutes}:${sec}`;
+};
+
 type Period = {
   hours: number;
   minutes: number;
@@ -12,6 +29,7 @@ type Period = {
 };
 
 export default function Timer() {
+  const [audio, setAudio] = useState<HTMLAudioElement | undefined>();
   const [seconds, setSeconds] = useState<null | number>(null);
   const [workoutSeconds, setWorkoutSeconds] = useState(0);
   const [restSeconds, setRestSeconds] = useState(0);
@@ -36,6 +54,11 @@ export default function Timer() {
   );
 
   useEffect(() => {
+    // Make sure to put audio file in public directory
+    setAudio(new Audio("/assets/ding.wav"));
+  }, []);
+
+  useEffect(() => {
     let interval: undefined | NodeJS.Timeout = undefined;
 
     if (timerState === "running" && seconds)
@@ -44,6 +67,8 @@ export default function Timer() {
       }, 1000);
     else if (timerState === "stopped") clearInterval(interval);
     else if (seconds === 0) {
+      audio?.play();
+
       if (roundsCompleted === rounds) {
         setTimerState("stopped");
         return clearInterval(interval);
@@ -140,6 +165,42 @@ export default function Timer() {
 
   return (
     <Page title="Workout Timer" content="Workout timer for your workouts.">
+      {rounds > 0 && workoutSeconds > 0 && !editWorkout && (
+        <div className="flex flex-col items-center pt-10">
+          <div>
+            <div className="stats shadow">
+              <div className="stat">
+                <div className="stat-title">Rounds</div>
+                <div className="stat-value text-2xl">{rounds}</div>
+              </div>
+            </div>
+
+            <div className="stats shadow">
+              <div className="stat">
+                <div className="stat-title">Workout</div>
+                <div className="stat-value text-2xl">
+                  {formatSeconds(workoutSeconds)}
+                </div>
+              </div>
+            </div>
+
+            <div className="stats shadow">
+              <div className="stat">
+                <div className="stat-title">Rest</div>
+                <div className="stat-value text-2xl">
+                  {formatSeconds(restSeconds)}
+                </div>
+              </div>
+            </div>
+          </div>
+          <button
+            className="mt-5 btn w-96 btn-outline"
+            onClick={() => setEditWorkout(true)}
+          >
+            Edit Workout
+          </button>
+        </div>
+      )}
       <div className="flex justify-center pt-20">
         {editWorkout ? (
           <div>
@@ -212,9 +273,38 @@ export default function Timer() {
           </div>
         ) : (
           <div>
-            <div>
+            <div
+              className={`radial-progress ${
+                seconds
+                  ? roundPeriod === "rest"
+                    ? "text-success"
+                    : "text-primary"
+                  : ""
+              }`}
+              style={
+                {
+                  "--value": seconds
+                    ? roundPeriod === "rest"
+                      ? (seconds / restSeconds) * 100
+                      : (seconds / workoutSeconds) * 100
+                    : 0,
+                  "--size": "24rem",
+                  "--thickness": "2px",
+                } as any
+              }
+            >
               {seconds != null ? (
-                <div className="flex flex-col items-center">{seconds}</div>
+                <div className="flex flex-col items-center">
+                  <div className="text-2xl leading-loose">
+                    {formatSeconds(seconds)}
+                  </div>
+                  <p className="leading-loose font-bold capitalize">
+                    {roundPeriod}
+                  </p>
+                  <p className="leading-loose font-bold">
+                    Rounds Left: {rounds - roundsCompleted}
+                  </p>
+                </div>
               ) : null}
             </div>
 
