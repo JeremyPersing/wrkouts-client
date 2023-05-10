@@ -140,8 +140,9 @@ export default function Timer() {
 
   const handleGetStarted = () => {
     let problems = "";
+    if (restSeconds < 1) problems += "Please enter a rest time greater than 0.";
     if (workoutSeconds < 1)
-      problems += "Please enter a workout time greater than 0. ";
+      problems += "Please enter a workout time greater than 0.";
     if (rounds < 1) problems += "Please make timer rounds more than 0.";
 
     if (problems !== "")
