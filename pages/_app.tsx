@@ -9,6 +9,7 @@ import { useStore } from "@/store";
 import { useEffect } from "react";
 import { getMe } from "@/services/user";
 
+// Redirects to NEXTAUTH_URL after login/register
 if (process.env.NODE_ENV === "development")
   process.env.NEXTAUTH_URL = "http://localhost:3000";
 

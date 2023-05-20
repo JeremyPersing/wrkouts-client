@@ -170,7 +170,7 @@ export default function WorkoutForm({
         </div>
       ))}
       <div className="flex justify-end">
-        <button className="btn btn-sm" onClick={addExercise}>
+        <button className="btn btn-sm mt-3" onClick={addExercise}>
           Add Exercise
         </button>
       </div>

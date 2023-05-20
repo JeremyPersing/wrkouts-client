@@ -41,7 +41,7 @@ export default function OneRepMaxCalculator({
         type="number"
         min={1}
         onChange={handleWeightChange}
-        value={weight}
+        value={weight <= 0 ? undefined : weight}
       />
 
       <Input
@@ -50,7 +50,7 @@ export default function OneRepMaxCalculator({
         min={1}
         placeholder="Number of Reps"
         onChange={handleRepsChange}
-        value={reps}
+        value={reps <= 0 ? undefined : reps}
       />
 
       <div className="flex w-full justify-center pt-10">

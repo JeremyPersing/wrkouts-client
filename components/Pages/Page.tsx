@@ -27,7 +27,7 @@ export default function Page({
       </Head>
       <div className="flex flex-col h-screen">
         {showNav && <Navbar />}
-        <main className="lg:mx-32 md:mx-18 mx-10">{children}</main>
+        <main className="lg:mx-32 md:mx-18 mx-10 py-5">{children}</main>
         {/* div below stretches out pages to take up the whole screen */}
         <div className="flex flex-grow"></div>
         {showFooter && <Footer />}

@@ -29,8 +29,9 @@ export default function PasswordInput({
           label={label}
           type={passwordShown ? "text" : "password"}
           placeholder={placeholder}
-          fieldName={fieldName}
           formik={formik}
+          fieldName={fieldName}
+          showErrors={false}
           autoComplete="password"
         />
 
@@ -42,6 +43,10 @@ export default function PasswordInput({
           )}
         </div>
       </div>
+      {/* Keep this here  because of the absolute eye above*/}
+      {formik && fieldName && (
+        <FormikErrors formik={formik} fieldName={fieldName} />
+      )}
     </div>
   );
 }

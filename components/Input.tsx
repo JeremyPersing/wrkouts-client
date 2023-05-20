@@ -8,6 +8,7 @@ interface InputProps extends ComponentPropsWithoutRef<"input"> {
   inputClassName?: string;
   fieldName?: string;
   formik?: FormikValues;
+  showErrors?: boolean;
 }
 
 export const Input = ({
@@ -18,10 +19,11 @@ export const Input = ({
   inputClassName,
   formik,
   fieldName,
+  showErrors = true,
   ...rest
 }: InputProps) => {
   return (
-    <div className={`form-control w-full ${className}`}>
+    <div className={`form-control ${className}`}>
       {label && <label className="label">{label}</label>}
       <input
         type={type}
@@ -37,7 +39,7 @@ export const Input = ({
         {...rest}
       />
 
-      {formik && fieldName && (
+      {formik && fieldName && showErrors && (
         <FormikErrors formik={formik} fieldName={fieldName} />
       )}
     </div>

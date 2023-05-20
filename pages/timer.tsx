@@ -39,17 +39,12 @@ type Period = {
 };
 
 export default function Timer() {
-  const { user } = useStore();
-
   const [audio, setAudio] = useState<HTMLAudioElement | undefined>();
   const [endAudio, setEndAudio] = useState<HTMLAudioElement | undefined>();
   const [seconds, setSeconds] = useState<null | number>(null);
   const [workoutSeconds, setWorkoutSeconds] = useState(0);
   const [restSeconds, setRestSeconds] = useState(0);
   const [roundPeriod, setRoundPeriod] = useState<"workout" | "rest">("workout");
-  const [workoutName, setWorkoutName] = useState("");
-  const [potentiallyDeletableWorkout, setPotentiallyDeletableWorkout] =
-    useState<TimerWorkout | undefined>();
 
   const [workoutPeriod, setWorkoutPeriod] = useState<Period>({
     hours: 0,
@@ -249,7 +244,7 @@ export default function Timer() {
               label="Rounds"
               placeholder="Rounds"
               min={1}
-              value={rounds}
+              value={rounds <= 0 ? undefined : rounds}
               className="mb-10"
               onChange={handleRoundsChange}
             />

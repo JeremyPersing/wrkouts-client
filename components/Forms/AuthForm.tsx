@@ -38,7 +38,7 @@ export const AuthForm = ({
       style={{ height: "36rem" }}
       className={`w-96 flex flex-col border p-10 rounded justify-center items-center ${className}`}
     >
-      <form onSubmit={formik.handleSubmit}>
+      <form onSubmit={formik.handleSubmit} className="w-full">
         <EmailInput formik={formik} fieldName="email" />
         <PasswordInput formik={formik} fieldName="password" />
 
@@ -75,7 +75,7 @@ export const AuthForm = ({
       </div>
 
       <button
-        className="btn w-full"
+        className="btn btn-outline btn- w-full"
         onClick={() =>
           signIn("google", {
             callbackUrl: "/",

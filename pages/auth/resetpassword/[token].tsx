@@ -19,29 +19,40 @@ export default function ResetPassword() {
     },
     validationSchema: resetPasswordSchema,
     onSubmit: async ({ password, passwordRepeat }) => {
-      if (!token || typeof token !== "string")
-        return showToastError(
-          "Unable to reset your password. Please try click the email link again or going through the forgot password process."
-        );
+      try {
+        if (!token || typeof token !== "string")
+          return showToastError(
+            "Unable to reset your password. Please try click the email link again or going through the forgot password process."
+          );
 
-      const passwordReset = await resetPassword({
-        password,
-        passwordRepeat,
-        token,
-      });
-
-      if (passwordReset) {
-        toast.success("Your password has been reset.", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
+        const passwordReset = await resetPassword({
+          password,
+          passwordRepeat,
+          token,
         });
-        return router.push("/auth/login");
+
+        if (passwordReset) {
+          toast.success("Your password has been reset.", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+          return router.push("/auth/login");
+        }
+
+        showToastError("There was an error in trying to reset your password.");
+      } catch (error: any) {
+        showToastError(
+          "An error has occurred trying to reset your password. " +
+            error?.message
+            ? error.message
+            : ""
+        );
       }
     },
   });

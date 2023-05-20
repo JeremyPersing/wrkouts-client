@@ -1,6 +1,7 @@
 import { FormikValues } from "formik";
 
 import { Input } from "./Input";
+import Select from "./Select";
 
 export default function ExerciseInput({
   index,
@@ -9,6 +10,8 @@ export default function ExerciseInput({
   index: number;
   formik: FormikValues;
 }) {
+  const values = formik.values.exercises[index];
+
   return (
     <div>
       <Input
@@ -16,28 +19,28 @@ export default function ExerciseInput({
         onChange={(e) =>
           formik.setFieldValue(`exercises[${index}].name`, e.target.value)
         }
-        value={formik.values.exercises[index].name}
+        value={values.name}
         label="Exercise Name"
         placeholder="Bench Press ..."
         fieldName="name"
       />
       <div className="flex justify-between">
-        <Input
-          type="number"
+        <Select
+          options={Array.from({ length: 100 }, (_, i) => i + 1)}
+          label="Sets"
           onChange={(e) =>
             formik.setFieldValue(
               `exercises[${index}].sets`,
               Number(e.target.value)
             )
           }
-          value={formik.values.exercises[index].sets}
-          min={1}
-          label="Sets"
-          placeholder="Sets"
-          fieldName="sets"
+          value={values.sets}
+          selectClassName="w-28"
         />
-        <Input
-          type="number"
+
+        <Select
+          options={Array.from({ length: 200 }, (_, i) => i + 1)}
+          label="Reps"
           className="mx-16"
           onChange={(e) =>
             formik.setFieldValue(
@@ -45,12 +48,10 @@ export default function ExerciseInput({
               Number(e.target.value)
             )
           }
-          value={formik.values.exercises[index].reps}
-          min={1}
-          label="Reps"
-          placeholder="Reps"
-          fieldName="reps"
+          value={values.reps}
+          selectClassName="w-28"
         />
+
         <Input
           type="number"
           onChange={(e) =>
@@ -59,11 +60,12 @@ export default function ExerciseInput({
               Number(e.target.value)
             )
           }
-          value={formik.values.exercises[index].weight}
+          value={values.weight <= 0 ? undefined : values.weight}
           min={1}
           label="Weight"
           placeholder="Weight"
           fieldName="weight"
+          className="w-28"
         />
       </div>
     </div>
