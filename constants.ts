@@ -1,7 +1,7 @@
 export const baseURL =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:4000/api/v1"
-    : "http://wrkouts.xyz/api/v1";
+  process.env.NODE_ENV === "production"
+    ? "https://api.wrkouts.xyz/api/v1"
+    : "http://localhost:4000/api/v1";
 
 export const tokenExpiration = 60 * 60 * 24;
 const userTimerWorkout = "/user/workouts/timer";

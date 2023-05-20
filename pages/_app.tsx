@@ -9,6 +9,9 @@ import { useStore } from "@/store";
 import { useEffect } from "react";
 import { getMe } from "@/services/user";
 
+if (process.env.NODE_ENV === "development")
+  process.env.NEXTAUTH_URL = "http://localhost:3000";
+
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <SessionProvider session={pageProps.session}>
