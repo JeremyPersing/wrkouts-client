@@ -2,10 +2,11 @@ import { useRouter } from "next/router";
 import { useFormik } from "formik";
 import { toast } from "react-toastify";
 
-import Page from "../../../components/Page";
-import { resetPasswordSchema } from "../../../constants";
+import Page from "../../../components/Pages/Page";
+import { resetPasswordSchema } from "../../../validation/auth";
 import PasswordInput from "@/components/Forms/Formik/PasswordInput";
 import { resetPassword } from "@/services/auth";
+import { showToastError } from "@/utils/toast";
 
 export default function ResetPassword() {
   const router = useRouter();
@@ -19,18 +20,8 @@ export default function ResetPassword() {
     validationSchema: resetPasswordSchema,
     onSubmit: async ({ password, passwordRepeat }) => {
       if (!token || typeof token !== "string")
-        return toast.error(
-          "Unable to reset your password. Please try click the email link again or going through the forgot password process.",
-          {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-          }
+        return showToastError(
+          "Unable to reset your password. Please try click the email link again or going through the forgot password process."
         );
 
       const passwordReset = await resetPassword({

@@ -1,6 +1,7 @@
 import axios from "axios";
 
 import { apiEndpoints } from "@/constants";
+import { User } from "@/types/User";
 
 export const loginOrRegisterUser = async (
   type: "login" | "register",
@@ -14,7 +15,11 @@ export const loginOrRegisterUser = async (
 
     if (!url || !email || !password) return null;
 
-    const { data } = await axios.post(url, { email, password });
+    const { data } = await axios.post<{
+      user: User;
+      accessToken: string;
+      refreshToken: string;
+    }>(url, { email, password });
 
     if (data) return data;
 
@@ -31,7 +36,11 @@ export const loginOAuthUser = async (
   try {
     if (!token) return null;
 
-    const { data } = await axios.post(apiEndpoints.oauthLogin, {
+    const { data } = await axios.post<{
+      user: User;
+      accessToken: string;
+      refreshToken: string;
+    }>(apiEndpoints.oauthLogin, {
       token,
       provider,
     });

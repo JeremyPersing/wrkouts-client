@@ -3,7 +3,10 @@ import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { GrGoogle } from "react-icons/gr";
 
-import { loginValidationSchema, registerValidationSchema } from "@/constants";
+import {
+  loginValidationSchema,
+  registerValidationSchema,
+} from "../../validation/auth";
 import EmailInput from "./Formik/EmailInput";
 import PasswordInput from "./Formik/PasswordInput";
 
@@ -72,14 +75,14 @@ export const AuthForm = ({
       </div>
 
       <button
-        className="btn gap-2 bg-slate-100 hover:bg-zinc-900 w-full"
+        className="btn w-full"
         onClick={() =>
           signIn("google", {
             callbackUrl: "/",
           })
         }
       >
-        <GrGoogle />
+        <GrGoogle className="mr-3" />
         Continue With Google
       </button>
     </div>

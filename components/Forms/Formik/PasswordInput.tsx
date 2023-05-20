@@ -2,7 +2,6 @@ import { FormikValues } from "formik";
 import { useState } from "react";
 import { HiEye, HiEyeOff } from "react-icons/hi";
 
-import { getFormikFieldErrors } from "../../../utils/getFormikFieldErrors";
 import FormikErrors from "./FormikErrors";
 import { Input } from "@/components/Input";
 
@@ -30,11 +29,9 @@ export default function PasswordInput({
           label={label}
           type={passwordShown ? "text" : "password"}
           placeholder={placeholder}
-          inputClassName={
-            getFormikFieldErrors({ formik, fieldName }) ? "input-error" : ""
-          }
+          fieldName={fieldName}
+          formik={formik}
           autoComplete="password"
-          {...formik.getFieldProps(fieldName)}
         />
 
         <div className="absolute bottom-4 right-4">
@@ -45,7 +42,6 @@ export default function PasswordInput({
           )}
         </div>
       </div>
-      <FormikErrors fieldName={fieldName} formik={formik} />
     </div>
   );
 }

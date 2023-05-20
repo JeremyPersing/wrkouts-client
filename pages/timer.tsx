@@ -1,25 +1,35 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import { toast } from "react-toastify";
 
 import { Input } from "@/components/Input";
-import Page from "@/components/Page";
+import Page from "@/components/Pages/Page";
 import Select from "@/components/Select";
+import { TimerWorkout } from "@/types/TimerWorkout";
+import { useStore } from "@/store";
+import ScoreCard from "@/components/ScoreCard";
+import { showToastError } from "@/utils/toast";
+
+const getTimePeriod = (seconds: number) => {
+  let hours = Math.floor(seconds / 3600);
+  let minutes = Math.floor((seconds % 3600) / 60);
+  let sec = Math.floor((seconds % 3600) % 60);
+  return {
+    hours,
+    minutes,
+    seconds: sec,
+  };
+};
 
 const formatSeconds = (seconds: number) => {
-  let hours = Math.floor(seconds / 3600)
-    .toString()
-    .padStart(2, "0");
-  let minutes = Math.floor((seconds % 3600) / 60)
-    .toString()
-    .padStart(2, "0");
-  let sec = Math.floor((seconds % 3600) % 60)
-    .toString()
-    .padStart(2, "0");
+  let { hours, minutes, seconds: sec } = getTimePeriod(seconds);
 
-  if (hours == "00" && minutes === "00") return `${sec}`;
-  if (hours !== "00") return `${hours}:${minutes}:${sec}`;
+  const strHours = hours.toString().padStart(2, "0");
+  const strMinutes = minutes.toString().padStart(2, "0");
+  const strSec = sec.toString().padStart(2, "0");
 
-  return `${minutes}:${sec}`;
+  if (strHours == "00" && strMinutes === "00") return `${strSec}`;
+  if (strHours !== "00") return `${strHours}:${strMinutes}:${strSec}`;
+
+  return `${strMinutes}:${strSec}`;
 };
 
 type Period = {
@@ -29,11 +39,17 @@ type Period = {
 };
 
 export default function Timer() {
+  const { user } = useStore();
+
   const [audio, setAudio] = useState<HTMLAudioElement | undefined>();
+  const [endAudio, setEndAudio] = useState<HTMLAudioElement | undefined>();
   const [seconds, setSeconds] = useState<null | number>(null);
   const [workoutSeconds, setWorkoutSeconds] = useState(0);
   const [restSeconds, setRestSeconds] = useState(0);
   const [roundPeriod, setRoundPeriod] = useState<"workout" | "rest">("workout");
+  const [workoutName, setWorkoutName] = useState("");
+  const [potentiallyDeletableWorkout, setPotentiallyDeletableWorkout] =
+    useState<TimerWorkout | undefined>();
 
   const [workoutPeriod, setWorkoutPeriod] = useState<Period>({
     hours: 0,
@@ -55,11 +71,20 @@ export default function Timer() {
 
   useEffect(() => {
     // Make sure to put audio file in public directory
-    setAudio(new Audio("/assets/ding.wav"));
+    setAudio(new Audio("/assets/shortbeep.mp3"));
+    setEndAudio(new Audio("/assets/ending-beep.mp3"));
   }, []);
 
   useEffect(() => {
     let interval: undefined | NodeJS.Timeout = undefined;
+
+    if (
+      seconds &&
+      (seconds === 3 || seconds === 2 || seconds === 1) &&
+      timerState === "running"
+    ) {
+      audio?.play();
+    }
 
     if (timerState === "running" && seconds)
       interval = setInterval(() => {
@@ -67,8 +92,7 @@ export default function Timer() {
       }, 1000);
     else if (timerState === "stopped") clearInterval(interval);
     else if (seconds === 0) {
-      audio?.play();
-
+      endAudio?.play();
       if (roundsCompleted === rounds) {
         setTimerState("stopped");
         return clearInterval(interval);
@@ -140,22 +164,13 @@ export default function Timer() {
 
   const handleGetStarted = () => {
     let problems = "";
-    if (restSeconds < 1) problems += "Please enter a rest time greater than 0.";
+    if (restSeconds < 1)
+      problems += "Please enter a rest time greater than 0. ";
     if (workoutSeconds < 1)
-      problems += "Please enter a workout time greater than 0.";
-    if (rounds < 1) problems += "Please make timer rounds more than 0.";
+      problems += "Please enter a workout time greater than 0. ";
+    if (rounds < 1) problems += "Please make timer rounds more than 0. ";
 
-    if (problems !== "")
-      return toast.error(problems, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
+    if (problems !== "") return showToastError(problems);
 
     setSeconds(workoutSeconds);
     setEditWorkout(false);
@@ -167,42 +182,16 @@ export default function Timer() {
   return (
     <Page title="Workout Timer" content="Workout timer for your workouts.">
       {rounds > 0 && workoutSeconds > 0 && !editWorkout && (
-        <div className="flex flex-col items-center pt-10">
-          <div>
-            <div className="stats shadow">
-              <div className="stat">
-                <div className="stat-title">Rounds</div>
-                <div className="stat-value text-2xl">{rounds}</div>
-              </div>
-            </div>
-
-            <div className="stats shadow">
-              <div className="stat">
-                <div className="stat-title">Workout</div>
-                <div className="stat-value text-2xl">
-                  {formatSeconds(workoutSeconds)}
-                </div>
-              </div>
-            </div>
-
-            <div className="stats shadow">
-              <div className="stat">
-                <div className="stat-title">Rest</div>
-                <div className="stat-value text-2xl">
-                  {formatSeconds(restSeconds)}
-                </div>
-              </div>
-            </div>
-          </div>
-          <button
-            className="mt-5 btn w-96 btn-outline"
-            onClick={() => setEditWorkout(true)}
-          >
-            Edit Workout
-          </button>
-        </div>
+        <ScoreCard
+          items={[
+            { title: "Rounds", body: rounds },
+            { title: "Workout", body: formatSeconds(workoutSeconds) },
+            { title: "Rest", body: formatSeconds(restSeconds) },
+          ]}
+        />
       )}
-      <div className="flex justify-center pt-20">
+
+      <div className="flex justify-center pt-10">
         {editWorkout ? (
           <div>
             <h3 className="text-2xl mb-5">Workout Time</h3>
@@ -274,39 +263,41 @@ export default function Timer() {
           </div>
         ) : (
           <div>
-            <div
-              className={`radial-progress ${
-                seconds
-                  ? roundPeriod === "rest"
-                    ? "text-success"
-                    : "text-primary"
-                  : ""
-              }`}
-              style={
-                {
-                  "--value": seconds
+            <div className="flex justify-center">
+              <div
+                className={`radial-progress  ${
+                  seconds
                     ? roundPeriod === "rest"
-                      ? (seconds / restSeconds) * 100
-                      : (seconds / workoutSeconds) * 100
-                    : 0,
-                  "--size": "24rem",
-                  "--thickness": "2px",
-                } as any
-              }
-            >
-              {seconds != null ? (
-                <div className="flex flex-col items-center">
-                  <div className="text-2xl leading-loose">
-                    {formatSeconds(seconds)}
+                      ? "text-success"
+                      : "text-primary"
+                    : ""
+                }`}
+                style={
+                  {
+                    "--value": seconds
+                      ? roundPeriod === "rest"
+                        ? (seconds / restSeconds) * 100
+                        : (seconds / workoutSeconds) * 100
+                      : 0,
+                    "--size": "20rem",
+                    "--thickness": "2px",
+                  } as any
+                }
+              >
+                {seconds != null ? (
+                  <div className="flex flex-col items-center">
+                    <div className="text-2xl leading-loose">
+                      {formatSeconds(seconds)}
+                    </div>
+                    <p className="leading-loose font-bold capitalize">
+                      {roundPeriod}
+                    </p>
+                    <p className="leading-loose font-bold">
+                      Rounds Left: {rounds - roundsCompleted}
+                    </p>
                   </div>
-                  <p className="leading-loose font-bold capitalize">
-                    {roundPeriod}
-                  </p>
-                  <p className="leading-loose font-bold">
-                    Rounds Left: {rounds - roundsCompleted}
-                  </p>
-                </div>
-              ) : null}
+                ) : null}
+              </div>
             </div>
 
             <div className="mt-16 flex justify-center">
@@ -317,7 +308,7 @@ export default function Timer() {
                 {timerState !== "running" ? "Start" : "Stop"}
               </button>
               <button
-                className="btn btn-error btn-outline ml-4 w-40"
+                className="btn btn-warning btn-outline ml-4 w-40"
                 onClick={resetTimer}
               >
                 Reset
@@ -326,6 +317,17 @@ export default function Timer() {
           </div>
         )}
       </div>
+
+      {rounds > 0 && workoutSeconds > 0 && !editWorkout && (
+        <div className="flex flex-col items-center mt-5">
+          <button
+            className="mt-5 btn w-96 btn-outline"
+            onClick={() => setEditWorkout(true)}
+          >
+            Edit Workout
+          </button>
+        </div>
+      )}
     </Page>
   );
 }

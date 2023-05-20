@@ -1,7 +1,7 @@
 import { ChangeEvent, useState } from "react";
 import { useFormik } from "formik";
 
-import { calorieCalculatorSchema } from "../../constants";
+import { calorieCalculatorSchema } from "@/validation/workouts";
 import {
   convertInchesToCM,
   convertLbsToKg,

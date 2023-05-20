@@ -1,11 +1,11 @@
 import { useFormik } from "formik";
 import { useState } from "react";
-import { toast } from "react-toastify";
 
-import Page from "../../components/Page";
-import { forgotUserPasswordSchema } from "@/constants";
+import Page from "../../components/Pages/Page";
+import { forgotUserPasswordSchema } from "../../validation/auth";
 import EmailInput from "@/components/Forms/Formik/EmailInput";
 import { submitForgotPassword } from "@/services/auth";
+import { showToastError } from "@/utils/toast";
 
 export default function ForgotPassword() {
   const [emailSent, setEmailSent] = useState(false);
@@ -20,28 +20,10 @@ export default function ForgotPassword() {
       if (forgotPasswordRes) {
         if (forgotPasswordRes.emailSent) return setEmailSent(true);
 
-        return toast.error(forgotPasswordRes.message, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
+        return showToastError(forgotPasswordRes.message);
       }
 
-      toast.error("Unable to find account", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
+      showToastError("Unable to find account");
     },
   });
 
@@ -60,7 +42,7 @@ export default function ForgotPassword() {
           ) : (
             <div className="py-16 px-4 rounded-lg w-full">
               <div className="flex justify-center pb-10">
-                <h2 className="font-semibold text-3xl ">
+                <h2 className="font-semibold text-3xl">
                   Please enter your email
                 </h2>
               </div>

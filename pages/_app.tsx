@@ -1,20 +1,44 @@
 import type { AppProps } from "next/app";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { SessionProvider } from "next-auth/react";
+import { SessionProvider, useSession } from "next-auth/react";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
+import "react-toastify/dist/ReactToastify.css";
 import "@/styles/globals.css";
 
-const queryClient = new QueryClient();
+import { useStore } from "@/store";
+import { useEffect } from "react";
+import { getMe } from "@/services/user";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <SessionProvider session={pageProps.session}>
-      <QueryClientProvider client={queryClient}>
-        <Component {...pageProps} />
-        <ToastContainer />
-      </QueryClientProvider>
+      <AuthLayout />
+      <Component {...pageProps} />
+      <ToastContainer />
     </SessionProvider>
   );
+}
+
+function AuthLayout() {
+  const { login, user, logout } = useStore();
+  const session = useSession();
+
+  useEffect(() => {
+    async function handleGetUser() {
+      if (session.status === "authenticated") {
+        const user = await getMe(session.data.accessToken);
+        if (user && user?.email) login(user);
+      } else if (
+        session.status === "unauthenticated" &&
+        user &&
+        user.email !== "defaultUser"
+      ) {
+        logout();
+      }
+    }
+
+    handleGetUser();
+  }, [session]);
+
+  return <></>;
 }

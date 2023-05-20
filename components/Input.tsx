@@ -33,6 +33,7 @@ export const Input = ({
             : ""
         }
         `}
+        {...(formik && fieldName && { ...formik.getFieldProps(fieldName) })}
         {...rest}
       />
 

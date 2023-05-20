@@ -1,14 +1,15 @@
-import { tokenExpiration } from "@/constants";
 import {
   getRefreshedTokenPair,
   loginOAuthUser,
   loginOrRegisterUser,
 } from "@/services/auth";
-import NextAuth, { Session } from "next-auth";
+import NextAuth, { NextAuthOptions, Session } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 
-export default NextAuth({
+import { tokenExpiration } from "@/constants";
+
+export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -29,12 +30,12 @@ export default NextAuth({
           credentials?.password
         );
 
-        if (data)
+        if (data) {
           return {
             ...data,
             accessTokenExpires: Date.now() + tokenExpiration * 1000,
-          };
-
+          } as any;
+        }
         return null;
       },
     }),
@@ -70,7 +71,10 @@ export default NextAuth({
       session.accessToken = token.accessToken;
 
       session.error = token.error as any;
+
       return session;
     },
   },
-});
+};
+
+export default NextAuth(authOptions);
