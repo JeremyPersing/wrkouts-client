@@ -21,6 +21,9 @@ export default function Footer() {
             Twemoji Project
           </Link>
         </p>
+        <Link href={"/privacy"} className="text-xs hover:text-blue-400">
+          Privacy Policy
+        </Link>
       </div>
       <div className="grid-flow-col gap-4 md:place-self-center md:justify-self-end">
         <Link target="__blank" href={"https://github.com/JeremyPersing/"}>
