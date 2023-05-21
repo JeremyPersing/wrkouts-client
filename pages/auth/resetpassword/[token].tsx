@@ -58,27 +58,30 @@ export default function ResetPassword() {
   });
 
   return (
-    <Page title="Reset Password" content="Reset Password">
-      <div className="flex flex-col h-screen items-center justify-center">
-        <h1 className="text-3xl font-bold pb-5">Reset Password</h1>
-        <div
-          className={`w-96 flex flex-col p-10 rounded justify-center items-center`}
-        >
-          <form onSubmit={formik.handleSubmit}>
-            <PasswordInput formik={formik} fieldName="password" />
-            <PasswordInput
-              formik={formik}
-              fieldName="passwordRepeat"
-              label="Repeat Password"
-              placeholder="Repeat Password"
-            />
-
-            <button type="submit" className="btn btn-block">
+    <Page title="Reset Password" content="Reset Password" showFooter={false}>
+      <section className="flex justify-center items-center">
+        <div className="flex flex-col items-center sm:w-96 w-full">
+          <div className="py-16 px-4 rounded-lg w-full">
+            <h2 className="font-semibold text-3xl text-center pb-10">
               Reset Password
-            </button>
-          </form>
+            </h2>
+
+            <form onSubmit={formik.handleSubmit}>
+              <PasswordInput formik={formik} fieldName="password" />
+              <PasswordInput
+                formik={formik}
+                fieldName="passwordRepeat"
+                label="Repeat Password"
+                placeholder="Repeat Password"
+              />
+
+              <button type="submit" className="btn btn-block">
+                Reset Password
+              </button>
+            </form>
+          </div>
         </div>
-      </div>
+      </section>
     </Page>
   );
 }

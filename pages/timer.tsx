@@ -188,54 +188,54 @@ export default function Timer() {
 
       <div className="flex justify-center pt-10">
         {editWorkout ? (
-          <div>
+          <div className="w-full sm:w-96">
             <h3 className="text-2xl mb-5">Workout Time</h3>
-            <div className="flex w-96 justify-between mb-10">
+            <div className="flex justify-between mb-10">
               <Select
                 options={Array.from({ length: 24 }, (_, i) => i)}
                 label="Hours"
                 onChange={(e) => handlePeriodChange(e, "workout", "hours")}
                 value={workoutPeriod.hours}
-                selectClassName="w-24"
+                selectClassName="sm:w-24"
               />
               <Select
                 options={Array.from({ length: 60 }, (_, i) => i)}
                 label="Minutes"
                 onChange={(e) => handlePeriodChange(e, "workout", "minutes")}
                 value={workoutPeriod.minutes}
-                selectClassName="w-24"
+                selectClassName="sm:w-24"
               />
               <Select
                 options={Array.from({ length: 60 }, (_, i) => i)}
                 label="Seconds"
                 onChange={(e) => handlePeriodChange(e, "workout", "seconds")}
                 value={workoutPeriod.seconds}
-                selectClassName="w-24"
+                selectClassName="sm:w-24"
               />
             </div>
 
             <h3 className="text-2xl mb-5">Rest Time</h3>
-            <div className="flex w-96 justify-between mb-10">
+            <div className="flex justify-between mb-10">
               <Select
                 options={Array.from({ length: 24 }, (_, i) => i)}
                 label="Hours"
                 onChange={(e) => handlePeriodChange(e, "rest", "hours")}
                 value={restPeriod.hours}
-                selectClassName="w-24"
+                selectClassName="sm:w-24"
               />
               <Select
                 options={Array.from({ length: 60 }, (_, i) => i)}
                 label="Minutes"
                 onChange={(e) => handlePeriodChange(e, "rest", "minutes")}
                 value={restPeriod.minutes}
-                selectClassName="w-24"
+                selectClassName="sm:w-24"
               />
               <Select
                 options={Array.from({ length: 60 }, (_, i) => i)}
                 label="Seconds"
                 onChange={(e) => handlePeriodChange(e, "rest", "seconds")}
                 value={restPeriod.seconds}
-                selectClassName="w-24"
+                selectClassName="sm:w-24"
               />
             </div>
 
@@ -274,7 +274,7 @@ export default function Timer() {
                         ? (seconds / restSeconds) * 100
                         : (seconds / workoutSeconds) * 100
                       : 0,
-                    "--size": "20rem",
+                    "--size": "18rem",
                     "--thickness": "2px",
                   } as any
                 }
@@ -295,15 +295,15 @@ export default function Timer() {
               </div>
             </div>
 
-            <div className="mt-16 flex justify-center">
+            <div className="mt-10 flex justify-center">
               <button
-                className="btn btn-success btn-outline w-40"
+                className="btn btn-success btn-outline w-36"
                 onClick={startOrStopTimer}
               >
                 {timerState !== "running" ? "Start" : "Stop"}
               </button>
               <button
-                className="btn btn-warning btn-outline ml-4 w-40"
+                className="btn btn-warning btn-outline ml-4 w-36"
                 onClick={resetTimer}
               >
                 Reset
@@ -316,7 +316,7 @@ export default function Timer() {
       {rounds > 0 && workoutSeconds > 0 && !editWorkout && (
         <div className="flex flex-col items-center mt-5">
           <button
-            className="mt-5 btn w-96 btn-outline"
+            className="mt-5 btn w-full sm:w-96 btn-outline"
             onClick={() => setEditWorkout(true)}
           >
             Edit Workout

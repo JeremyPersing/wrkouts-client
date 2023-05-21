@@ -28,9 +28,9 @@ export default function ForgotPassword() {
   });
 
   return (
-    <Page title="Forgot Password" content="Forgot Password">
-      <section className="h-screen flex justify-center items-center">
-        <div className="flex flex-col items-center w-96">
+    <Page title="Forgot Password" content="Forgot Password" showFooter={false}>
+      <section className="flex justify-center items-center">
+        <div className="flex flex-col items-center sm:w-96 w-full">
           {emailSent ? (
             <div className="flex justify-center pb-10 w-full">
               <h2 className="font-semibold text-lg text-center">
@@ -41,11 +41,9 @@ export default function ForgotPassword() {
             </div>
           ) : (
             <div className="py-16 px-4 rounded-lg w-full">
-              <div className="flex justify-center pb-10">
-                <h2 className="font-semibold text-3xl">
-                  Please enter your email
-                </h2>
-              </div>
+              <h2 className="font-semibold text-3xl text-center pb-10">
+                Please enter your email
+              </h2>
 
               <form onSubmit={formik.handleSubmit}>
                 <EmailInput fieldName="email" formik={formik} />

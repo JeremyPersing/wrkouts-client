@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <Page title="Home" content="wrkouts.xyz - A super simple fitness tool">
       <div className="flex flex-col items-center justify-center">
-        <div className="w-96 ">
+        <div className="sm:w-96 w-full">
           {!user?.workouts || user?.workouts?.length === 0 ? (
             <div className="pt-10">
               <h2 className="font-bold text-3xl">
@@ -28,13 +28,13 @@ export default function Home() {
 
           <label
             htmlFor="workout-modal"
-            className="btn btn-primary btn-outline w-96 mt-10"
+            className="btn btn-primary btn-outline w-full mt-10"
           >
             Add Workout
           </label>
 
           {user?.workouts && user?.workouts.length ? (
-            <div className="mt-10 w-96 overflow-y-auto">
+            <div className="mt-10 sm:w-96 w-full overflow-y-auto">
               <p className="pb-2 font-bold text-xl">Your Workouts</p>
               {user.workouts.map((workout) => {
                 return (
@@ -58,7 +58,7 @@ export default function Home() {
                       </div>
                       <ul>
                         {workout.exercises.map((i) => (
-                          <div key={i.name}>
+                          <div key={i.name} className="sm">
                             <span className="font-semibold">{i.name}</span>
                             <span>
                               {" "}

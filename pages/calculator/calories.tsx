@@ -4,7 +4,7 @@ import CalorieCalculator from "@/components/Forms/CalorieCalculator";
 export default function Calories() {
   return (
     <Page title="Calorie Calculator" content="Calorie Calculator">
-      <div className="flex justify-center items-cente">
+      <div className="flex justify-center items-center">
         <CalorieCalculator />
       </div>
     </Page>

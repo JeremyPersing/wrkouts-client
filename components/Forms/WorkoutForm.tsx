@@ -14,7 +14,7 @@ import { useSession } from "next-auth/react";
 import { showToastError } from "@/utils/toast";
 import { workoutSchema } from "@/validation/workouts";
 
-const defaultExercise = { name: "", sets: 1, reps: 1, weight: 1 };
+const defaultExercise = { name: "", sets: 1, reps: 1, weight: 0 };
 const defaultState = {
   date: new Date().toLocaleDateString("en-CA"),
   exercises: [defaultExercise],

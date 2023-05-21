@@ -35,13 +35,13 @@ export default function ExerciseInput({
             )
           }
           value={values.sets}
-          selectClassName="w-28"
+          selectClassName="sm:w-28"
         />
 
         <Select
           options={Array.from({ length: 200 }, (_, i) => i + 1)}
           label="Reps"
-          className="mx-16"
+          className="sm:mx-16 mx-2"
           onChange={(e) =>
             formik.setFieldValue(
               `exercises[${index}].reps`,
@@ -49,7 +49,7 @@ export default function ExerciseInput({
             )
           }
           value={values.reps}
-          selectClassName="w-28"
+          selectClassName="sm:w-28"
         />
 
         <Input
@@ -65,7 +65,7 @@ export default function ExerciseInput({
           label="Weight"
           placeholder="Weight"
           fieldName="weight"
-          className="w-28"
+          className="sm:w-28"
         />
       </div>
     </div>

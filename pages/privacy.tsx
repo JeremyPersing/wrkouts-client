@@ -1,6 +1,5 @@
 import Page from "@/components/Pages/Page";
 import Link from "next/link";
-import { useRouter } from "next/router";
 
 export default function Privacy() {
   return (
