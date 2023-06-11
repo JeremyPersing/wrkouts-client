@@ -62,7 +62,7 @@ export default function Navbar() {
               </ul>
             </li>
 
-            <div className="sm:hidden">
+            {/* <div className="sm:hidden">
               {status === "authenticated" ? (
                 <li>
                   <a onClick={handleSignOut}>Sign Out</a>
@@ -77,7 +77,7 @@ export default function Navbar() {
                   </li>
                 </>
               )}
-            </div>
+            </div> */}
           </ul>
         </div>
         <Link href="/">
@@ -119,7 +119,7 @@ export default function Navbar() {
           </li>
         </ul>
       </div>
-      <div className="navbar-end">
+      {/* <div className="navbar-end">
         <div>
           {status === "authenticated" ? (
             <button className="hidden sm:block btn" onClick={handleSignOut}>
@@ -136,7 +136,7 @@ export default function Navbar() {
             </div>
           )}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

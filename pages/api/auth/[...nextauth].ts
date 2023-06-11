@@ -24,6 +24,8 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials, req) {
         const type = (credentials as any).type;
 
+        console.log(credentials);
+
         const data = await loginOrRegisterUser(
           type,
           credentials?.email,
